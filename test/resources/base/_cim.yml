@@ -1,0 +1,12 @@
+version: 0.1
+stack:
+  name: 'serverless-demo'
+#    prod:
+#      name: 'serverless-demo-prod'
+#      default: false
+#    dev:
+#      name: 'serverless-demo-dev'
+#      default: true
+  template:
+    file: 'cloudformation.yml'
+    bucket: 'serverless-demo-cf-templates'

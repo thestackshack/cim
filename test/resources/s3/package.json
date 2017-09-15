@@ -1,0 +1,23 @@
+{
+  "name": "serverless-demo-app.s3",
+  "version": "1.0.0",
+  "description": "Demo the CloudFormation templates for all the Lambda event sources.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "CloudFormation",
+    "Lambda",
+    "AWS"
+  ],
+  "author": "rgfindley@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.110.0",
+    "mocha": "^3.5.0"
+  }
+}
