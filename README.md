@@ -3,6 +3,8 @@ CIM is your AWS Cloud Infrastructure Manager.
 
 Easily create your stack, build and deploy your code, monitor performance, and view logs.
 
+BETA - Still under active development.
+
 ```
 # Install CIM
 npm install cim -g
@@ -21,14 +23,8 @@ cim deploy
 cim delete
 ```
 
-## TODO
-- Plugin framework
-  - Internal core plugins
-  - External 3rd party plugins
-  - Extensions:
-    - template
-    - hooks
-    - commands
-- Add ability to see lambda logs.
-- App performance
-- CI/CD
+## Templates
+ - stack, Default CloudFormation setup.
+ - lambda-nodejs, Node.js Lambda example setup.
+
+ More stacks will be created.
