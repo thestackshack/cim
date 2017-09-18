@@ -211,6 +211,26 @@ describe('configs', function() {
             done();
         });
     });
+    it('resolve_params - env', function(done) {
+        var stacks = [
+            {
+                stack:
+                    {
+                        foo: 'bar',
+                        param: '${stack.foo}',
+                        env: '${env.test}'
+                    }
+            }
+        ];
+        process.env.test = 'yes';
+        configs.resolve_params(stacks, function(err, stacks) {
+            if (err) return done(err);
+            //console.log(JSON.stringify(stacks, null, 3));
+            assert.equal(stacks[0].stack.param, 'bar');
+            assert.equal(stacks[0].stack.env, 'yes');
+            done();
+        });
+    });
     it('resolve_params - missing', function(done) {
         var stacks = [
             {

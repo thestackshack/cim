@@ -9,11 +9,14 @@ describe('lambda', function() {
     it('resolve_stack_params', function(done) {
         var obj = {
             foo: 'bar',
-            param: '${foo}'
+            param: '${foo}',
+            test: '${env.test}'
         };
+        process.env.test = 'yes';
         lambda.resolve_stack_params({stack: obj}, function(err, input) {
             //console.log(JSON.stringify(obj, null, 3));
             assert.equal(input.stack.param, 'bar');
+            assert.equal(input.stack.test, 'yes');
             done();
         });
     });

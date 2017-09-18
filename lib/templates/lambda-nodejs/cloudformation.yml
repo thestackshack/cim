@@ -1,0 +1,129 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+#
+# CloudFormation input parameters
+#
+Parameters:
+#  VpcStackName:
+#    Type: String
+#    Description: The vpc stack name, used to import output values from this stack.  cross-stack resource sharing.
+
+#
+# CloudFormation resources
+#
+Resources:
+
+  #
+  # Role that our Lambda will assume to provide access to other AWS resources
+  #
+  IamRoleLambdaExecution:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: '/'
+
+  #
+  # Create a Policy and attach it to our Lambda Role.
+  #
+  IamPolicyLambdaExecution:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: IamPolicyLambdaExecution
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+          Resource: '*'
+
+          # Add additional permissions here.  What other AWS resources does your Lambda need access to?
+
+      Roles:
+      - Ref: IamRoleLambdaExecution
+
+  #
+  # Our Lambda function.
+  #
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Timeout: 5
+      Role:
+        Fn::GetAtt:
+          - IamRoleLambdaExecution
+          - Arn
+      Code:
+        ZipFile: !Sub |
+          'use strict';
+
+          exports.handler = function(event, context) {
+              winston.info(JSON.stringify(event));
+              context.succeed('Hello CIM!');
+          };
+      Runtime: nodejs6.10
+
+  #
+  # Sample Lambda Event Trigger
+  #
+
+  #
+  # S3 bucket
+  #
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName:
+        Fn::Join:
+          - ''
+          - - !Ref AWS::StackName
+            - '-s3'
+      AccessControl: 'Private'
+      NotificationConfiguration:
+        LambdaConfigurations:
+          -
+            Function: !GetAtt LambdaFunction.Arn
+            Event: 's3:ObjectCreated:*'
+#            Filter:
+#              S3Key:
+#                Rules:
+#                  -
+#                    Name: suffix
+#                    Value: .png
+
+  #
+  # S3 permission to invoke Lambda
+  #
+  PermissionForS3ToInvokeLambda:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref LambdaFunction
+      Action: 'lambda:InvokeFunction'
+      Principal: 's3.amazonaws.com'
+      SourceAccount: !Ref AWS::AccountId
+
+#
+# Outputs to be used by other CloudFormation templates if needed.
+#
+Outputs:
+  LambdaFunction:
+    Description: Lambda Function
+    Value: !Ref LambdaFunction
+    Export:
+      Name: !Sub '${AWS::StackName}-LambdaFunction'
+  S3Bucket:
+    Description: S3 Bucket
+    Value: !Ref S3Bucket
+    Export:
+      Name: !Sub '${AWS::StackName}-S3Bucket'

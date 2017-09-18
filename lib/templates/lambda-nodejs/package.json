@@ -1,0 +1,13 @@
+{
+  "name": "cim-stack",
+  "version": "1.0.0",
+  "description": "CIM lambda-nodejs stack.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.110.0",
+    "mocha": "^3.5.0"
+  }
+}

@@ -1,0 +1,30 @@
+version: 0.1
+stack:
+  name: stack # Note: Update this with your stack name
+  template:
+    file: cloudformation.yml
+    bucket: cim-stack-artifacts # Note: Update this with your bucket name.  Stacks are uploaded here prior to deployment.
+
+#
+# Reference parent stacks fo included shared information like stack name.
+#
+#  parents:
+#    vpc: '../vpc'
+
+#
+# Define stack input parameters.
+#
+#  parameters:
+#    VpcStackName: '${stack.parents.vpc.stack.name}'
+
+#
+# Define stack capabilities required.
+#
+#  capabilities:
+#    - 'CAPABILITY_IAM'
+
+#
+# Define global tags.
+#
+#  tags:
+#    app: 'cim-stack'
