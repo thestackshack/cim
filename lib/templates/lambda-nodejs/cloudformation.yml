@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 #
 # CloudFormation input parameters
 #
-Parameters:
+#Parameters:
 #  VpcStackName:
 #    Type: String
 #    Description: The vpc stack name, used to import output values from this stack.  cross-stack resource sharing.

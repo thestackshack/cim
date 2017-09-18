@@ -20,8 +20,8 @@ stack:
 #
 # Define stack capabilities required.
 #
-#  capabilities:
-#    - 'CAPABILITY_IAM'
+  capabilities:
+    - 'CAPABILITY_IAM'
 
 #
 # Define global tags.

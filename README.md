@@ -1,14 +1,27 @@
 # Cloud Infrastructure Manager (CIM)
 CIM is your AWS Cloud Infrastructure Manager.  
-Easily create your stack, build &amp; deploy your code, monitor your performance, and view logs.
 
-Why should you use CIM?
+Easily create your stack, build and deploy your code, monitor performance, and view logs.
+
+```
+# Install CIM
+npm install cim -g
+
+# Create your first stack using the lambda template
+mkdir app
+cim create --template=lambda-nodejs
+
+# Deploy your stack
+cim stackup
+
+# Deploy your code
+cim deploy
+
+# Delete you stack
+cim delete
+```
 
 ## TODO
-- Add 'create' feature
-  - create stack
-  - create lambda
-  - create recipe (for each lambda trigger, ecs service, etc...)
 - Plugin framework
   - Internal core plugins
   - External 3rd party plugins
@@ -17,4 +30,5 @@ Why should you use CIM?
     - hooks
     - commands
 - Add ability to see lambda logs.
+- App performance
 - CI/CD
