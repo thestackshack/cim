@@ -29,7 +29,7 @@ stack:
 #  tags:
 #    app: 'cim-stack'
 
-deploy:
+deploy_lambda:
   phases:
     pre_deploy:
       commands:

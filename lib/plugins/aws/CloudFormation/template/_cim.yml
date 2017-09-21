@@ -3,7 +3,9 @@ stack:
   name: stack # Note: Update this with your stack name
   template:
     file: cloudformation.yml
-    bucket: cim-stack-artifacts # Note: Update this with your bucket name.  Stacks are uploaded here prior to deployment.
+    # Stacks are uploaded here prior to deployment.  The bucket is created if it doesn't exist.
+    # The name can be the same for all your _cim.yml files.
+    bucket: cim-stack-artifacts # Note: Update this with your bucket name.
 
 #
 # Reference parent stacks fo included shared information like stack name.

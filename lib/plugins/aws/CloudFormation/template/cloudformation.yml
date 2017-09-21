@@ -20,22 +20,22 @@ Resources:
 #
 # S3 bucket
 #
-#  S3Bucket:
-#    Type: 'AWS::S3::Bucket'
-#    Properties:
-#      BucketName:
-#        Fn::Join:
-#          - ''
-#          - - !Ref AWS::StackName
-#            - '-resources'
-#      AccessControl: 'Private'
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName:
+        Fn::Join:
+          - ''
+          - - !Ref AWS::StackName
+            - '-resources'
+      AccessControl: 'Private'
 
 #
 # Outputs to be used by other CloudFormation templates if needed.
 #
 Outputs:
-#  S3Bucket:
-#    Description: Artifacts S3 Bucket
-#    Value: !Ref S3Bucket
-#    Export:
-#      Name: !Sub '${AWS::StackName}-ResourcesBucket'
+  S3Bucket:
+    Description: Artifacts S3 Bucket
+    Value: !Ref S3Bucket
+    Export:
+      Name: !Sub '${AWS::StackName}-ResourcesBucket'

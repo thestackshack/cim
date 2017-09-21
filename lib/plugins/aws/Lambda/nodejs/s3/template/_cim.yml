@@ -1,0 +1,61 @@
+version: 0.1
+stack:
+  name: cim-stack # Note: Update this with your stack name
+  template:
+    file: cloudformation.yml
+    bucket: cim-stack-artifacts # Note: Update this with your bucket name.  Stacks are uploaded here prior to deployment.'
+
+#
+# Reference parent stacks fo included shared information like stack name.
+#
+#  parents:
+#    vpc: '../vpc'
+
+#
+# Define stack input parameters.
+#
+#  parameters:
+#    VpcStackName: '${stack.parents.vpc.stack.name}'
+
+#
+# Define stack capabilities required.
+#
+  capabilities:
+    - 'CAPABILITY_IAM'
+
+#
+# Define global tags.
+#
+#  tags:
+#    app: 'cim-stack'
+
+deploy_lambda:
+  phases:
+    pre_deploy:
+      commands:
+        # Install all npm packages including dev packages.
+        - npm install
+
+        # Run the tests
+        # - npm test
+
+        # Remove all the npm packages.
+        - rm -Rf node_modules
+
+        # Only install the non-dev npm packages.  We don't want to bloat our Lambda with dev packages.
+        - npm install --production
+
+        # Zip the Lambda for upload to S3.
+        - zip -r index.zip .
+    deploy:
+      functions:
+        -
+          function_name: ${stack.outputs.LambdaFunction}
+          zip_file: index.zip
+    post_deploy:
+      commands:
+        # Remove the zip file.
+        - rm -Rf index.zip
+
+        # Reinstall the dev npm packages.
+        - npm install
