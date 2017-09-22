@@ -29,33 +29,34 @@ stack:
 #  tags:
 #    app: 'cim-stack'
 
-deploy_lambda:
-  phases:
-    pre_deploy:
-      commands:
-        # Install all npm packages including dev packages.
-        - npm install
+lambda:
+  functions:
+    -
+      alias: hello
+      function_name: ${stack.outputs.LambdaFunction}
+      zip_file: index.zip
+  deploy:
+    phases:
+      pre_deploy:
+        commands:
+          # Install all npm packages including dev packages.
+          - npm install
 
-        # Run the tests
-        # - npm test
+          # Run the tests
+          # - npm test
 
-        # Remove all the npm packages.
-        - rm -Rf node_modules
+          # Remove all the npm packages.
+          - rm -Rf node_modules
 
-        # Only install the non-dev npm packages.  We don't want to bloat our Lambda with dev packages.
-        - npm install --production
+          # Only install the non-dev npm packages.  We don't want to bloat our Lambda with dev packages.
+          - npm install --production
 
-        # Zip the Lambda for upload to S3.
-        - zip -r index.zip .
-    deploy:
-      functions:
-        -
-          function_name: ${stack.outputs.LambdaFunction}
-          zip_file: index.zip
-    post_deploy:
-      commands:
-        # Remove the zip file.
-        - rm -Rf index.zip
+          # Zip the Lambda for upload to S3.
+          - zip -r index.zip .
+      post_deploy:
+        commands:
+          # Remove the zip file.
+          - rm -Rf index.zip
 
-        # Reinstall the dev npm packages.
-        - npm install
+          # Reinstall the dev npm packages.
+          - npm install

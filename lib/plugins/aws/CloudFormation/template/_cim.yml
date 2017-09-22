@@ -1,6 +1,6 @@
 version: 0.1
 stack:
-  name: stack # Note: Update this with your stack name
+  name: cim-stack # Note: Update this with your stack name
   template:
     file: cloudformation.yml
     # Stacks are uploaded here prior to deployment.  The bucket is created if it doesn't exist.

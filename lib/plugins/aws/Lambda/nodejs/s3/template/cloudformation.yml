@@ -69,7 +69,7 @@ Resources:
           'use strict';
 
           exports.handler = function(event, context) {
-              winston.info(JSON.stringify(event));
+              console.log(JSON.stringify(event));
               context.succeed('Hello CIM!');
           };
       Runtime: nodejs6.10
@@ -84,11 +84,6 @@ Resources:
   S3Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName:
-        Fn::Join:
-          - ''
-          - - !Ref AWS::StackName
-            - '-s3'
       AccessControl: 'Private'
       NotificationConfiguration:
         LambdaConfigurations:
