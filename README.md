@@ -21,7 +21,7 @@ cim create --template=lambda-node
 cim stack-up
 
 # Deploy your code
-cim deploy-lambda
+cim lambda-deploy
 
 # Delete you stack
 cim stack-delete
