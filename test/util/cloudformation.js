@@ -3,7 +3,7 @@
 const assert = require('assert');
 const _ = require('lodash');
 const async = require('async');
-const cloudformation = require('../lib/cloudformation');
+const cloudformation = require('../../lib/util/cloudformation');
 
 describe('cloudformation', function() {
     it('is_ready', function(done) {

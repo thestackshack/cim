@@ -23,6 +23,9 @@ cim stack-up
 # Deploy your code
 cim lambda-deploy
 
+# View logs
+cim lambda-logs --alias=hello --tail=true
+
 # Delete you stack
 cim stack-delete
 ```

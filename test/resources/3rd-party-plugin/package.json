@@ -1,0 +1,6 @@
+{
+  "name": "3rd-party-plugin",
+  "version": "1.0.0",
+  "description": "3rd party plugin.",
+  "main": "index.js"
+}

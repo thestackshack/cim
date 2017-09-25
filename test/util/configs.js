@@ -3,19 +3,22 @@
 const assert = require('assert');
 const _ = require('lodash');
 const async = require('async');
-const configs = require('../lib/configs');
+const configs = require('../../lib/util/configs');
+const path = require('path');
 
 describe('configs', function() {
     it('find', function(done) {
         configs.find(
             {
-                recursive: true,
-                dir: __dirname+'/resources/'
+                args: {
+                    recursive: true,
+                    dir: __dirname+'/../resources/'
+                }
             },
             function(err, files) {
                 if (err) return done(err);
                 //console.log(JSON.stringify(files, null, 3));
-                assert.ok(_.includes(files, __dirname+'/resources/base/_cim.yml'));
+                assert.ok(_.includes(files, path.resolve(__dirname, '../resources/base/_cim.yml')));
                 assert.ok(_.size(files) >= 2);
                 done();
             });
@@ -23,7 +26,7 @@ describe('configs', function() {
     it('parse', function(done) {
         configs.parse(
             [
-                __dirname+'/resources/s3/_cim.yml'
+                __dirname+'/../resources/s3/_cim.yml'
             ],
             function(err, data) {
                 if (err) return done(err);
@@ -144,7 +147,9 @@ describe('configs', function() {
         async.waterfall([
             async.constant(
                 {
-                    dir: __dirname+'/resources/missing_cf'
+                    args: {
+                        dir: __dirname + '/../resources/missing_cf'
+                    }
                 }),
             configs.find,
             configs.parse,
@@ -159,7 +164,9 @@ describe('configs', function() {
         async.waterfall([
             async.constant(
                 {
-                    dir: __dirname+'/resources/missing_parent'
+                    args: {
+                        dir: __dirname+'/../resources/missing_parent'
+                    }
                 }),
             configs.find,
             configs.parse,
@@ -174,7 +181,9 @@ describe('configs', function() {
         async.waterfall([
             async.constant(
                 {
-                    dir: __dirname+'/resources/s3'
+                    args: {
+                        dir: __dirname + '/../resources/s3'
+                    }
                 }),
             configs.find,
             configs.parse,
@@ -186,16 +195,18 @@ describe('configs', function() {
     });
     it('resolve_stack_params', function(done) {
         var obj = {
-            foo: 'bar',
-            param: '${foo}'
+            stack: {
+                foo: 'bar',
+                param: '${foo}'
+            }
         };
         configs.resolve_stack_params(obj);
         //console.log(JSON.stringify(obj, null, 3));
-        assert.equal(obj.param, 'bar');
+        assert.equal(obj.stack.param, 'bar');
         done();
     });
     it('resolve_params', function(done) {
-        var stacks = [
+        var stacks = {stacks: [
             {
                 stack:
                     {
@@ -203,7 +214,7 @@ describe('configs', function() {
                         param: '${stack.foo}'
                     }
             }
-        ];
+        ]};
         configs.resolve_params(stacks, function(err, stacks) {
             if (err) return done(err);
             //console.log(JSON.stringify(stacks, null, 3));
@@ -212,7 +223,7 @@ describe('configs', function() {
         });
     });
     it('resolve_params - env', function(done) {
-        var stacks = [
+        var stacks = {stacks: [
             {
                 stack:
                     {
@@ -221,7 +232,7 @@ describe('configs', function() {
                         env: '${env.test}'
                     }
             }
-        ];
+        ]};
         process.env.test = 'yes';
         configs.resolve_params(stacks, function(err, stacks) {
             if (err) return done(err);

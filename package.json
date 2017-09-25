@@ -1,6 +1,6 @@
 {
   "name": "cim",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Cloud Infrastructure Manager",
   "main": "lib/cim.js",
   "bin": {
@@ -18,7 +18,7 @@
     "yargs": "^8.0.2"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "repository": {
     "type": "git",
