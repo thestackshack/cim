@@ -198,8 +198,163 @@ cim <command> --help
 ```
 
 # _cim.yml
+The _cim.yml file is where details about your stack are stored.  Lets take a look at base template.
+
+## Basic
+```
+version: 0.1
+stack:
+  name: 'base'
+  template:
+    file: 'cloudformation.yml'
+    bucket: 'base-templates'
+```
+
+The stack `name` will be used when creating your CloudFormation stack.  Shen you view all your CloudFormation stacks through the AWS console, this will be the name.  
+A lot of the AWS resources created within this stack will also have this name as a prefix within their name.
+
+The `template` defines the local CloudFormation `file` to use for this stack.  When calling CloudFormation the CloudFormation file needs to be on S3.  The S3 `bucket` is where CIM stores the CloudFormation file prior to calling CloudFormation.
+
+## Parent stacks
+In most cases you will have multiple stacks, and these stacks will be nested.  For example, lets say you have a `base` stack for your VPC and other shared resources, and then a stack for your api application.  Your project structure might look like:
+```
+/iac
+    /base
+        - _cim.yml
+        - cloudformation.yml
+    /api-app
+        - _cim.yml
+        - cloudformation.yml
+```
+Through the use of the `parents` field you can reference and reuse items in a parent stack.  In our api app example we reuse the parent stack name and template bucket.  
+```
+version: 0.1
+stack:
+  name: '${stack.parents.base.stack.name}-api'
+  template:
+    file: 'cloudformation.yml'
+    bucket: '${stack.parents.base.stack.template.bucket}'
+  parents:
+    base: '../base'
+```
+You can reference multiple `parents` by key.
+
+## Parameters
+The `parameters` field is used to define the input parameter values sent to CloudFormation during a [stack-up](#stack-up) command.
+
+Continuing our example above lets say we also want to pass in the base stack name as an input parameter for cross stack parameter referencing.
+```
+version: 0.1
+stack:
+  name: '${stack.parents.base.stack.name}-api'
+  template:
+    file: 'cloudformation.yml'
+    bucket: '${stack.parents.base.stack.template.bucket}'
+  parents:
+    base: '../base'
+  parameters:
+    BaseStackName: '${stack.parents.base.stack.name}'
+```
+
+## Capabilities
+If you have IAM resources, you can specify either capability. If you have IAM resources with custom names, you must specify CAPABILITY_NAMED_IAM. If you don't specify this parameter, this action returns an InsufficientCapabilities error.
+
+Valid Values: CAPABILITY_IAM | CAPABILITY_NAMED_IAM
+Continuing our example above lets say we also want to pass in the base stack name as an input parameter for cross stack parameter referencing.
+```
+version: 0.1
+stack:
+  name: '${stack.parents.base.stack.name}-api'
+  template:
+    file: 'cloudformation.yml'
+    bucket: '${stack.parents.base.stack.template.bucket}'
+  parents:
+    base: '../base'
+  parameters:
+    BaseStackName: '${stack.parents.base.stack.name}'
+  capabilities:
+    - 'CAPABILITY_IAM'
+```
+
+## Tags
+Tags are used to not only tag your CloudFormation stack but to also tag all resources created by the stack given that those resources support tags.
+```
+version: 0.1
+stack:
+  name: '${stack.parents.base.stack.name}-api'
+  template:
+    file: 'cloudformation.yml'
+    bucket: '${stack.parents.base.stack.template.bucket}'
+  parents:
+    base: '../base'
+  parameters:
+    BaseStackName: '${stack.parents.base.stack.name}'
+  capabilities:
+    - 'CAPABILITY_IAM'
+  tags:
+    app: 'api-app'
+    owner: 'John Doe'
+```
+
+## Lambda
+If you stack includes one or more lambda's you can add the `lambda` section to your _cim.yml to enable Lambda support ([lambda-deploy](#lambda-deploy), [lambda-logs](#lambda-logs)).
+
+In this example we have two Lambda functions.  The `function_name` will be an output param from our stack.  The `alias` use used by the [lambda-deploy](#lambda-deploy) and [lambda-logs](#lambda-logs) commands to specify a single function.
+
+The `deploy` section which is broken up into two parts is used by the [lambda-deploy](#lambda-deploy) command.
+- `pre_deploy` Install any dependencies, run the tests, and package the Lambda zip for deployment.
+- `post_deploy` Tear down any leftover artifacts from the `pre_build` phase.
+
+The Lambda zip that is packaged in the `pre_build` phase must match the `zip_file` under each function.  When a function is deployed it uses the `zip_file` as the deployment artifact.
+```
+lambda:
+  functions:
+    -
+      alias: hello
+      function_name: ${stack.outputs.LambdaFunction}
+      zip_file: index.zip
+    -
+      alias: second
+      function_name: ${stack.outputs.LambdaFunctionSecond}
+      zip_file: index.zip
+  deploy:
+    phases:
+      pre_deploy:
+        commands:
+          # Install all npm packages including dev packages.
+          - npm install
+
+          # Run the tests
+          # - npm test
+
+          # Remove all the npm packages.
+          - rm -Rf node_modules
+
+          # Only install the non-dev npm packages.  We don't want to bloat our Lambda with dev packages.
+          - npm install --production
+
+          # Zip the Lambda for upload to S3.
+          - zip -r index.zip .
+      post_deploy:
+        commands:
+          # Remove the zip file.
+          - rm -Rf index.zip
+
+          # Reinstall the dev npm packages.
+          - npm install
+```
 
 # Templates
+The templates are using when [creating](#create) a new package.
+```
+cim create --template=<template>
+```
+
+| Name | Description |
+| --- | --- |
+| cloudformation | Our base setup. |
+| lambda-node | A single Lambda function. |
+| lambda-node-s3 | A single Lambda function with an S3 event trigger. |
 
 # Plugin Framework
 
