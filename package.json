@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://rgfindl@github.com/thestackshack/cim.git"
+    "url": "https://rgfindl@github.com/thestackshack/cim.git"
   },
   "keywords": [
     "CloudFormation",

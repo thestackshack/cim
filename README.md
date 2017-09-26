@@ -1,4 +1,8 @@
 # Cloud Infrastructure Manager (CIM)
+[![npm](https://img.shields.io/npm/v/cim.svg?maxAge=2592000?style=plastic)](https://www.npmjs.com/package/cim)
+[![npm](https://img.shields.io/npm/dt/cim.svg?maxAge=2592000?style=plastic)](https://www.npmjs.com/package/cim)
+[![npm](https://img.shields.io/npm/l/cim.svg?maxAge=2592000?style=plastic)](https://github.com/claudiajs/cim/blob/master/LICENSE)
+
 CIM is your AWS Cloud Infrastructure Manager.  Easily manage your Infrastructure as Code (IaC).  
 
 The importance of IaC has increased due to the rise in popularity of cloud functions, event driven architectures, and the number of AWS services offered.
