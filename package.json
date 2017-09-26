@@ -1,6 +1,6 @@
 {
   "name": "cim",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Cloud Infrastructure Manager",
   "main": "lib/cim.js",
   "bin": {
