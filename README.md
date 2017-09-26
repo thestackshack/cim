@@ -1,18 +1,23 @@
 # Cloud Infrastructure Manager (CIM)
-[![npm](https://img.shields.io/npm/v/cim.svg?maxAge=2592000?style=plastic)](https://www.npmjs.com/package/cim)
-[![npm](https://img.shields.io/npm/dt/cim.svg?maxAge=2592000?style=plastic)](https://www.npmjs.com/package/cim)
-[![npm](https://img.shields.io/npm/l/cim.svg?maxAge=2592000?style=plastic)](https://github.com/claudiajs/cim/blob/master/LICENSE)
+[![version](https://img.shields.io/npm/v/cim.svg?maxAge=360)](https://www.npmjs.com/package/cim)
+[![downloads](https://img.shields.io/npm/dt/cim.svg?maxAge=360)](https://www.npmjs.com/package/cim)
+[![license](https://img.shields.io/npm/l/cim.svg?maxAge=360)](https://github.com/claudiajs/cim/blob/master/LICENSE)
+[![dependencies](https://img.shields.io/david/thestackshack/cim.svg?maxAge=360)](https://www.npmjs.com/package/cim)
 
-CIM is your AWS Cloud Infrastructure Manager.  Easily manage your Infrastructure as Code (IaC).  
+CIM takes the pain out of Infrastructure as Code and CloudFormation! 
 
-The importance of IaC has increased due to the rise in popularity of cloud functions, event driven architectures, and the number of AWS services offered.
-Implementing IaC at the onset of a new project is now a requirement.
+The importance of IaC has increased, due to the rise in popularity of cloud functions, event driven architectures, and the number of AWS services offered.  
+Logic has slowly been pulled out of our applications and into cloud service providers.  This is amazing and allows our applications to scale and be cost effective but it changes how they look and feel
+Infrastructure as Code is just as important, or more important, than code itself.  
+Implementing IaC at the onset of a new project is now a must.  But don't worry, CIM is here to help.  
 
-CIM takes the pain out of CloudFormation scripts by providing:
- - Nested CloudFormation script support
- - CloudFormation parameter management
- - CloudFormation templates to help you get started
- - Lambda Support
+Tell me more about CIM.
+ - CIM makes it easy to create, update, delete stacks
+ - CIM allows you to create nested stacks
+ - CIM helps organize stack inputs (parameters)
+ - CIM provides templates to help you get started
+ - CIM has support for Lambda functions
+ - CIM has an extensible Plugin framework
 
 Easily create your stack, build and deploy your code, and view your logs.
 
@@ -55,7 +60,7 @@ npm install cim -g
 
 ## Commands
 ### create
-Create a new CIM package based on a give `template`.
+Create a new CIM package based on a give [template](#Templates).
 #### Usage
 ```
 mkdir app
@@ -83,6 +88,7 @@ View all the available commands.
 cim help
 ```
 
+## Templates
 
 ## Plugin Framework
 
