@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+#
+# CloudFormation input parameters
+#
+#Parameters:
+#  VpcStackName:
+#    Type: String
+#    Description: The vpc stack name, used to import output values from this stack.  cross-stack resource sharing.
+
+#
+# CloudFormation resources
+#
+Resources:
+
+#
+# Add your CloudFormation resources here...
+#
+
+#
+# S3 bucket
+#
+  ResourcesS3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      AccessControl: 'Private'
+
+#
+# Outputs to be used by other CloudFormation templates if needed.
+#
+Outputs:
+  ResourcesS3Bucket:
+    Description: Resources S3 Bucket
+    Value: !Ref ResourcesS3Bucket
+    Export:
+      Name: !Sub '${AWS::StackName}-ResourcesBucket'

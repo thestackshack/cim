@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path');
+
 // Functions
 const test_fn = require('./lib/test');
 
@@ -40,6 +42,11 @@ class TestPlugin {
         done();
     }
 
+    /**
+     * Return all the before and after hooks this plugin exposes.
+     *
+     * @returns hooks
+     */
     hooks() {
         // Example hooks.
         return {
@@ -58,7 +65,11 @@ class TestPlugin {
      * @returns {null}
      */
     template() {
-        return null;
+        return {
+            name: 'test',
+            description: 'Test CloudFormation setup.',
+            path: path.resolve(__dirname, 'template')
+        }
     }
 
 }

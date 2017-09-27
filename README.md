@@ -89,6 +89,8 @@ cim create --template=<template>
 ```
 Where `<template>` is equal to one of the templates from `cim templates`.
 
+For examples see the [templates](#templates-1).
+
 ### Options
 - `--template`: The name of a [template](#templates-1).
   - _ex. --template=lambda-node_
@@ -296,6 +298,52 @@ stack:
     owner: 'John Doe'
 ```
 
+## Stage
+The `stage` object is used to override any part of the configuration file what that `--stage` is used as a command line option.  For example if we have the following dev stage:
+```
+version: 0.1
+stack:
+  name: 'base-prod'
+  template:
+    file: 'cloudformation.yml'
+    bucket: 'base-templates'
+  parameters:
+    param1: 'prod-param'
+stage:
+  dev:
+    stack:
+      name: 'base-dev'
+      parameters:
+        param1: 'dev-param'
+```
+
+Now when we use the `--stage=dev` command line option, our stack name will be 'base-dev' and our param1 will be 'dev-param'.  Any field can be overridden.    
+
+## opt
+You can reference any other field in the config file and use it in a variable.
+```
+version: 0.1
+stack:
+  name: 'base-prod'
+  template:
+    file: 'cloudformation.yml'
+    bucket: 'base-templates'
+  parameters:
+    param1: '${opt.stack.name}'
+```
+## env
+You can reference any environment var in the config file and use it in a variable.
+```
+version: 0.1
+stack:
+  name: 'base-prod'
+  template:
+    file: 'cloudformation.yml'
+    bucket: 'base-templates'
+  parameters:
+    param1: '${env.param1}'
+```
+
 ## Lambda
 If you stack includes one or more lambda's you can add the `lambda` section to your _cim.yml to enable Lambda support ([lambda-deploy](#lambda-deploy), [lambda-logs](#lambda-logs)).
 
@@ -352,12 +400,16 @@ cim create --template=<template>
 
 | Name | Description |
 | --- | --- |
-| cloudformation | Our base setup. |
-| lambda-node | A single Lambda function. |
-| lambda-node-s3 | A single Lambda function with an S3 event trigger. |
+| [cloudformation](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/CloudFormation/template) | Our base setup. |
+| [lambda-node](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/template) | A single Lambda function. |
+| [lambda-node-s3](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/s3/template) | A single Lambda function with an S3 event trigger. |
 
 # Plugin Framework
+Do you want to create additional CIM commands?  Or do you want to create `before` and `after` hooks for any CIM command?  Or do you just want to create a new template?
 
+There are two ways to contribute to CIM:
+1. Add a new [Plugin](https://github.com/thestackshack/cim/tree/master/lib/plugins) and create a PR.
+2. Create your own 3rd party CIM plugin.  Here is an [example](https://github.com/thestackshack/cim/tree/master/test/resources/3rd-party-plugin).  Install these plugins globally.  CIM searches the global npm directory for packages starting with `cim-` or `cim_`.
 
 # TODO
 - Add all lambda event triggers as templates
