@@ -14,7 +14,7 @@ Infrastructure as Code is just as important, or more important, than the code it
 
  - CIM makes it easy to create, update, and delete stacks
  - CIM allows you to create nested stacks
- - CIM helps organize stack inputs (parameters)
+ - CIM helps organize stack input parameters
  - CIM provides templates to help you get started
  - CIM has support for Lambda functions
  - CIM has an extensible Plugin framework
@@ -411,6 +411,7 @@ There are two ways to contribute to CIM:
 1. Add a new [Plugin](https://github.com/thestackshack/cim/tree/master/lib/plugins) and create a PR.
 2. Create your own 3rd party CIM plugin.  Here is an [example](https://github.com/thestackshack/cim/tree/master/test/resources/3rd-party-plugin).  Install these plugins globally.  CIM searches the global npm directory for packages starting with `cim-` or `cim_`.
 
-# TODO
+# Coming soon...
 - Add all lambda event triggers as templates
-- Add multiple CloudFormation scripts per package
+- Add multiple CloudFormation scripts per package?  Maybe...
+- KMS encryption/decryption for input parameters
