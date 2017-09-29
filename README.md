@@ -4,6 +4,8 @@
 [![license](https://img.shields.io/npm/l/cim.svg?maxAge=360)](https://github.com/claudiajs/cim/blob/master/LICENSE)
 [![dependencies](https://img.shields.io/david/thestackshack/cim.svg?maxAge=360)](https://www.npmjs.com/package/cim)
 
+[![](https://nodei.co/npm/cim.svg?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/cim)
+
 CIM takes the pain out of Infrastructure as Code and CloudFormation! 
 
 The importance of IaC has increased, due to the rise in popularity of cloud functions, event driven architectures, and the number of AWS services offered.  
