@@ -1,0 +1,130 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+#
+# CloudFormation input parameters
+#
+#Parameters:
+#  VpcStackName:
+#    Type: String
+#    Description: The vpc stack name, used to import output values from this stack.  cross-stack resource sharing.
+
+#
+# CloudFormation resources
+#
+Resources:
+
+  #
+  # SNS Topic
+  #
+  SNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::Join:
+          - ''
+          - - Ref: AWS::StackName
+            - ' Topic'
+      TopicName:
+        Fn::Join:
+          - ''
+          - - Ref: AWS::StackName
+            - '-topic'
+
+  #
+  # Role that our Lambda will assume to provide access to other AWS resources
+  #
+  IamRoleLambdaExecution:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: '/'
+
+  #
+  # Create a Policy and attach it to our Lambda Role.
+  #
+  IamPolicyLambdaExecution:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: IamPolicyLambdaExecution
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - s3:*
+          Resource: '*'
+      Roles:
+      - Ref: IamRoleLambdaExecution
+
+  #
+  # Our Lambda function.
+  #
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Timeout: 5
+      Role:
+        Fn::GetAtt:
+          - IamRoleLambdaExecution
+          - Arn
+      Code:
+        ZipFile: !Sub |
+          'use strict';
+
+          exports.handler = function(event, context) {
+              console.log(JSON.stringify(event));
+              context.succeed('Hello CIM!');
+          };
+      Runtime: nodejs6.10
+
+  #
+  # Subscribe our new Lambda function to the SNS topic.
+  #
+  LambdaSNSSubscription:
+    Type: AWS::SNS::Subscription
+    DependsOn: LambdaFunction
+    Properties:
+      TopicArn: !Ref SNSTopic
+      Protocol: lambda
+      Endpoint: !GetAtt LambdaFunction.Arn
+
+  #
+  # Give SNS permission to invoke our Lambda
+  #
+  PermissionForSNSToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref LambdaFunction
+      Action: 'lambda:InvokeFunction'
+      Principal: 'sns.amazonaws.com'
+      SourceArn: !Ref SNSTopic
+
+#
+# Outputs to be used by other CloudFormation templates if needed.
+#
+Outputs:
+  LambdaFunction:
+    Description: Lambda Function
+    Value: !Ref LambdaFunction
+    Export:
+      Name: !Sub '${AWS::StackName}-LambdaFunction'
+  SNSTopic:
+    Description: SNS Topic
+    Value: !Ref SNSTopic
+    Export:
+      Name: !Sub '${AWS::StackName}-SNSTopic'

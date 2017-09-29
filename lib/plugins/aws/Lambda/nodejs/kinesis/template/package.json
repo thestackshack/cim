@@ -1,5 +1,5 @@
 {
-  "name": "cim-lambda-s3",
+  "name": "cim-lambda-kinesis",
   "version": "1.0.0",
   "description": "CIM lambda-nodejs stack.",
   "main": "index.js",

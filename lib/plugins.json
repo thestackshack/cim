@@ -3,5 +3,11 @@
   "./plugins/aws/CloudFormation/CloudFormation",
   "./plugins/aws/Lambda/Lambda",
   "./plugins/aws/Lambda/nodejs/LambdaNode",
-  "./plugins/aws/Lambda/nodejs/s3/LambdaNodeS3"
+  "./plugins/aws/Lambda/nodejs/s3/LambdaNodeS3",
+  "./plugins/aws/Lambda/nodejs/dynamodb/LambdaNodeDynamoDB",
+  "./plugins/aws/Lambda/nodejs/kinesis/LambdaNodeKinesis",
+  "./plugins/aws/Lambda/nodejs/api-gateway/LambdaNodeAPIGateway",
+  "./plugins/aws/Lambda/nodejs/sns/LambdaNodeSNS",
+  "./plugins/aws/Lambda/nodejs/cloudwatch-cron/LambdaNodeCloudwatchCron",
+  "./plugins/aws/Lambda/nodejs/cloudwatch-logs/LambdaNodeCloudwatchLogs"
 ]

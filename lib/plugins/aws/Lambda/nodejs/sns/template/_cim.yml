@@ -1,6 +1,6 @@
 version: 0.1
 stack:
-  name: cim-lambda-s3 # Note: Update this with your stack name
+  name: cim-lambda-sns # Note: Update this with your stack name
   template:
     file: cloudformation.yml
     bucket: cim-stack-artifacts # Note: Update this with your bucket name.  Stacks are uploaded here prior to deployment.'
