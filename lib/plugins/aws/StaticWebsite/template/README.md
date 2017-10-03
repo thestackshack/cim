@@ -5,6 +5,8 @@ This template will create the following static website:
 - Certificate Manager to provide the SSL cert
 - Route53 to perform the DNS routing
 
+[![](architecture.png)](architecture.png)
+
 # Setup
 ## Prerequisites 
 - Register your domain with Route53

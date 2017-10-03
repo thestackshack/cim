@@ -3,7 +3,7 @@ stack:
   name: static-website # Note: Update this with your stack name
   template:
     file: cloudformation.yml
-    bucket: cim-stack-artifacts-${stack.name} # Note: Update this with your bucket name.  Stacks are uploaded here prior to deployment.'
+    bucket: cim-stack-artifacts # Note: Update this with your bucket name.  Stacks are uploaded here prior to deployment.'
 #
 # Reference parent stacks fo included shared information like stack name.
 #
