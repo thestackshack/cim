@@ -415,6 +415,7 @@ cim create --template=<template>
 | Name | Description |
 | --- | --- |
 | [cloudformation](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/CloudFormation/template) | Basic setup. |
+| [static-website](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/StaticWebsite/template) | Static S3 website with SSL & CDN. |
 | [lambda-node](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/template) | A single Lambda function. |
 | [lambda-node-s3](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/s3/template) | A single Lambda function with an S3 event trigger. |
 | [lambda-node-dynamodb](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/dynamodb/template) | A single Lambda function with a DynamoDB stream event trigger. |

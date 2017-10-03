@@ -1,6 +1,7 @@
 [
   "./plugins/Plugin",
   "./plugins/aws/CloudFormation/CloudFormation",
+  "./plugins/aws/StaticWebsite/StaticWebsite",
   "./plugins/aws/Lambda/Lambda",
   "./plugins/aws/Lambda/nodejs/LambdaNode",
   "./plugins/aws/Lambda/nodejs/s3/LambdaNodeS3",
