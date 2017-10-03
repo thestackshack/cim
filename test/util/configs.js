@@ -193,18 +193,6 @@ describe('configs', function() {
             done();
         });
     });
-    it('resolve_stack_params', function(done) {
-        var obj = {
-            stack: {
-                foo: 'bar',
-                param: '${foo}'
-            }
-        };
-        configs.resolve_stack_params(obj);
-        //console.log(JSON.stringify(obj, null, 3));
-        assert.equal(obj.stack.param, 'bar');
-        done();
-    });
     it('resolve_params', function(done) {
         var stacks = {stacks: [
             {

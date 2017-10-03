@@ -345,6 +345,18 @@ stack:
   parameters:
     param1: '${env.param1}'
 ```
+## kms.decrypt
+You can include any kms encrypted string (base64 encoded) and CIM will decrypt prior to running the commend.
+```
+version: 0.1
+stack:
+  name: 'base-prod'
+  template:
+    file: 'cloudformation.yml'
+    bucket: 'base-templates'
+  parameters:
+    param1: '${kms.decrypt(<kms encrypted and bas64 encoded string)}'
+```
 
 ## Lambda
 If you stack includes one or more lambda's you can add the `lambda` section to your _cim.yml to enable Lambda support ([lambda-deploy](#lambda-deploy), [lambda-logs](#lambda-logs)).
