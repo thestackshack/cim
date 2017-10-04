@@ -10,7 +10,7 @@ CIM takes the pain out of Infrastructure as Code and CloudFormation!
 
 The importance of IaC has increased, due to the rise in popularity of cloud functions, event driven architectures, and the number of AWS services offered.  
 
-Logic has slowly been pulled out of our applications and into cloud service providers.  This is amazing and allows our applications to scale and be cost effective but it changes how they look and feel
+Logic has slowly been pulled out of our applications and into cloud service providers.  This is amazing and allows our applications to scale and be cost effective but it changes how they look and feel.
 
 Infrastructure as Code is just as important, or more important, than the code itself.  Implementing IaC at the onset of a new project is a must.  But don't worry, CIM is here to help.  
 
@@ -359,15 +359,15 @@ stack:
 ```
 
 ## Lambda
-If you stack includes one or more lambda's you can add the `lambda` section to your _cim.yml to enable Lambda support ([lambda-deploy](#lambda-deploy), [lambda-logs](#lambda-logs)).
+If your stack includes one or more lambda's you can add the `lambda` section to your _cim.yml to enable Lambda support ([lambda-deploy](#lambda-deploy), [lambda-logs](#lambda-logs)).
 
-In this example we have two Lambda functions.  The `function_name` will be an output param from our stack.  The `alias` use used by the [lambda-deploy](#lambda-deploy) and [lambda-logs](#lambda-logs) commands to specify a single function.
+In this example we have two Lambda functions.  The `function_name` will be an output param from our stack.  The `alias` is used by the [lambda-deploy](#lambda-deploy) and [lambda-logs](#lambda-logs) commands to specify a single function.
 
 The `deploy` section which is broken up into two parts is used by the [lambda-deploy](#lambda-deploy) command.
 - `pre_deploy` Install any dependencies, run the tests, and package the Lambda zip for deployment.
-- `post_deploy` Tear down any leftover artifacts from the `pre_build` phase.
+- `post_deploy` Tear down any leftover artifacts from the `pre_deploy` phase.
 
-The Lambda zip that is packaged in the `pre_build` phase must match the `zip_file` under each function.  When a function is deployed it uses the `zip_file` as the deployment artifact.
+The Lambda zip that is packaged in the `pre_deploy` phase must match the `zip_file` under each function.  When a function is deployed it uses the `zip_file` as the deployment artifact.
 ```
 lambda:
   functions:
@@ -433,5 +433,5 @@ There are two ways to contribute to CIM:
 2. Create your own 3rd party CIM plugin.  Here is an [example](https://github.com/thestackshack/cim/tree/master/test/resources/3rd-party-plugin).  Install these plugins globally.  CIM searches the global npm directory for packages starting with `cim-` or `cim_`.
 
 # Coming soon...
+- Add cloudformation change set.  createChangeSet, executeChangeSet.
 - Add multiple CloudFormation scripts per package?  Maybe...
-- KMS encryption/decryption for input parameters

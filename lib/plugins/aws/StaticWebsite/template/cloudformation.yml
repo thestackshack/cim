@@ -4,9 +4,9 @@ AWSTemplateFormatVersion: '2010-09-09'
 # CloudFormation input parameters
 #
 Parameters:
-  TLD:
+  Route53HostedZoneName:
     Type: String
-    Description: TLD name needed by Route53 to perform DNS (example.com)
+    Description: Route53 hosted zone name needed to perform DNS (example.com.)
   Domain:
     Type: String
     Description: Domain name for your website (example.com)
@@ -165,11 +165,7 @@ Resources:
   DomainDNS:
     Type: AWS::Route53::RecordSetGroup
     Properties:
-      HostedZoneName:
-        Fn::Join:
-          - ''
-          - - !Ref TLD
-            - '.'
+      HostedZoneName: !Ref Route53HostedZoneName
       RecordSets:
         -
           Name: !Ref Domain
@@ -185,11 +181,7 @@ Resources:
     Type: AWS::Route53::RecordSet
     Condition: NeedsRedirect
     Properties:
-      HostedZoneName:
-        Fn::Join:
-          - ''
-          - - !Ref TLD
-            - '.'
+      HostedZoneName: !Ref Route53HostedZoneName
       Name: !Ref Redirect
       Type: 'CNAME'
       TTL: 900

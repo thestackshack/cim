@@ -14,8 +14,8 @@ stack:
 # Define stack input parameters.
 #
   parameters:
-    # The top level domain that you created in Route53.
-    TLD: 'example.com'
+    # Route53 hosted zone name.
+    Route53HostedZoneName: 'example.com.'
     # The domain you wish to use for this static website.
     Domain: 'example.com'
     # A redirect you wish to use.
