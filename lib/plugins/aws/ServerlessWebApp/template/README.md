@@ -1,4 +1,4 @@
-# Static S3 website with SSL and CDN
+# Static S3 website with SSL, CDN, and CI/CD
 This template will create the following static website:
 - S3 bucket to store and serve static website
 - CloudFront to cache and serve website over SSL and using your custom domain

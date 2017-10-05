@@ -1,20 +1,26 @@
 version: 0.1
 stack:
-  name: cim-lambda-api-gateway # Note: Update this with your stack name
+  name: cim-serverless-api # Note: Update this with your stack name
   template:
     file: cloudformation.yml
     bucket: cim-stack-artifacts # Note: Update this with your bucket name.  Stacks are uploaded here prior to deployment.'
-#
-# Reference parent stacks fo included shared information like stack name.
-#
-#  parents:
-#    vpc: '../vpc'
+  #
+  # Reference parent stacks fo included shared information like stack name.
+  #
+  #parents:
+  #  vpc: '../vpc'
 
-#
-# Define stack input parameters.
-#
-#  parameters:
-#    VpcStackName: '${stack.parents.vpc.stack.name}'
+  #
+  # Define stack input parameters.
+  #
+  # Optional - Custom domain name settings.  If you specify 'TLD' you must also specify a 'Domain'.
+  #            After you 'stack-up' you will need to verify your email address so that AWS can issue the SSL certificate for you domain.
+  #            More info here:  http://docs.aws.amazon.com/acm/latest/userguide/gs-acm-validate.html
+  parameters:
+    # The top level domain that you created in Route53.
+    TLD: 'example.com'
+    # The domain you wish to use for this api.
+    Domain: 'api.example.com'
 
 #
 # Define stack capabilities required.
@@ -23,10 +29,20 @@ stack:
     - 'CAPABILITY_IAM'
 
 #
-# Define global tags.
+# Override for 'dev' environment.  For testing purposes.
 #
-#  tags:
-#    app: 'cim-stack'
+stage:
+  dev:
+    stack:
+      name: cim-serverless-api-dev
+      parameters:
+        Domain: 'dev-api.example.com'
+
+  #
+  # Define global tags.
+  #
+  #tags:
+  #  app: 'cim-stack'
 
 lambda:
   functions:

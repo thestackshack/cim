@@ -415,12 +415,12 @@ cim create --template=<template>
 | Name | Description |
 | --- | --- |
 | [cloudformation](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/CloudFormation/template) | Basic setup. |
-| [static-website](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/StaticWebsite/template) | Static S3 website with SSL & CDN. |
+| [serverless-web-app](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/ServerlessWebApp/template) | Static S3 website with SSL, CDN, and CI/CD. |
+| [serverless-api](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/ServerlessApi/template) | API Gateway proxying calls to a Lambda backend. Optional custom domain.  |
 | [lambda-node](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/template) | A single Lambda function. |
 | [lambda-node-s3](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/s3/template) | A single Lambda function with an S3 event trigger. |
 | [lambda-node-dynamodb](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/dynamodb/template) | A single Lambda function with a DynamoDB stream event trigger. |
 | [lambda-node-kinesis](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/kinesis/template) | A single Lambda function with a Kinesis stream event trigger. |
-| [lambda-node-api-gateway](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/api-gateway/template) | A single Lambda function with an API Gateway event trigger. |
 | [lambda-node-sns](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/sns/template) | A single Lambda function with an SNS event trigger. |
 | [lambda-node-cloudwatch-cron](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/cloudwatch-cron/template) | A single Lambda function with a scheduled CloudWatch cron event trigger. |
 | [lambda-node-cloudwatch-logs](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/cloudwatch-logs/template) | A single Lambda function with a CloudWatch Logs event trigger. |

@@ -1,5 +1,28 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
+Parameters:
+  TLD:
+    Type: String
+    Description: TLD name needed by Route53 to perform DNS (example.com)
+    Default: ''
+  Domain:
+    Type: String
+    Description: Domain name for your api (api.example.com)
+    Default: ''
+  Path:
+    Type: String
+    Description: The path part of your api (api.example.com/path)
+    Default: 'api'
+  Stage:
+    Type: String
+    Description: The deployment stage used by API Gateway
+    Default: 'api'
+
+Conditions:
+  UseCustomDomain: !And
+    - !Not [!Equals [!Ref TLD, '']]
+    - !Not [!Equals [!Ref Domain, '']]
+
 Resources:
 
   #
@@ -83,7 +106,7 @@ Resources:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId: !GetAtt RestApi.RootResourceId
-      PathPart: api
+      PathPart: !Ref Path #ex. example.com/api.
       RestApiId: !Ref RestApi
 
   ApiGatewayMethodOptions:
@@ -163,7 +186,7 @@ Resources:
     Type: AWS::ApiGateway::Deployment
     Properties:
       RestApiId: !Ref RestApi
-      StageName: prod
+      StageName: !Ref Stage # Maps to the custom domain name.  BasePathMapping.Stage
     DependsOn:
       - ApiGatewayMethodPost
       - ApiGatewayMethodGet
@@ -189,13 +212,78 @@ Resources:
             - Ref: RestApi
             - '/*/*'
 
+  #
+  # SSL Certificate needed by CloudFront.
+  #
+  SSL:
+    Type: AWS::CertificateManager::Certificate
+    Condition: UseCustomDomain
+    Properties:
+      DomainName: !Ref Domain
+      DomainValidationOptions:
+        - DomainName: !Ref Domain
+          ValidationDomain: !Ref TLD
+
+  #
+  # Custom Domain Name
+  #
+  ApiDomainName:
+    Type: AWS::ApiGateway::DomainName
+    Condition: UseCustomDomain
+    Properties:
+      DomainName: !Ref Domain
+      CertificateArn: !Ref SSL
+
+  #
+  # Wire custom domain to Api Gateway
+  #
+  BasePathMapping:
+    Type: AWS::ApiGateway::BasePathMapping
+    Condition: UseCustomDomain
+    Properties:
+      DomainName: !Ref ApiDomainName
+      RestApiId: !Ref RestApi
+      Stage: !Ref Stage
+
+  #
+  # Route53 DNS record set to map our domain to API Gateway
+  #
+  DomainDNS:
+    Type: AWS::Route53::RecordSetGroup
+    Condition: UseCustomDomain
+    Properties:
+      HostedZoneName:
+        Fn::Join:
+          - ''
+          - - !Ref TLD
+            - '.'
+      RecordSets:
+        -
+          Name: !Ref Domain
+          Type: 'A'
+          AliasTarget:
+            HostedZoneId: 'Z2FDTNDATAQYW2' # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-aliastarget.html#cfn-route53-aliastarget-hostedzoneid
+            DNSName: !GetAtt ApiDomainName.DistributionDomainName
+
 Outputs:
-  ApiUrl:
+  ApiGatewayUrl:
     Description: URL of your API endpoint
     Value: !Join
       - ''
-      - - https://
+      - - 'https://'
         - !Ref RestApi
         - '.execute-api.'
         - !Ref AWS::Region
-        - '.amazonaws.com/prod/api'
+        - '.amazonaws.com/'
+        - !Ref Stage
+        - '/'
+        - !Ref Path
+  CustomDomainUrl:
+    Description: URL of your API endpoint
+    Condition: UseCustomDomain
+    Value: !Join
+      - ''
+      - - 'https://'
+        - !Ref Domain
+        - '/'
+        - !Ref Path

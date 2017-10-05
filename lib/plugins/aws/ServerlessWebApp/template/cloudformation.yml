@@ -4,19 +4,15 @@ AWSTemplateFormatVersion: '2010-09-09'
 # CloudFormation input parameters
 #
 Parameters:
-  Route53HostedZoneName:
+  TLD:
     Type: String
-    Description: Route53 hosted zone name needed to perform DNS (example.com.)
+    Description: TLD name needed by Route53 to perform DNS (example.com)
   Domain:
     Type: String
     Description: Domain name for your website (example.com)
   Redirect:
     Type: String
     Description: Redirect to Domain (www.example.com redirects to example.com)
-    Default: ''
-  CertDomain:
-    Type: String
-    Description: Use this as the domain when creating the SSL cert instead of Domain.
     Default: ''
   GitHubOwner:
     Type: String
@@ -38,7 +34,6 @@ Parameters:
 
 Conditions:
   NeedsRedirect: !Not [!Equals [!Ref Redirect, '']]
-  UseCertDomain: !Not [!Equals [!Ref CertDomain, '']]
   NeedsCICD: !And
     - !Not [!Equals [!Ref GitHubOwner, '']]
     - !Not [!Equals [!Ref GitHubRepo, '']]
@@ -79,7 +74,10 @@ Resources:
   SSL:
     Type: AWS::CertificateManager::Certificate
     Properties:
-      DomainName: !If [UseCertDomain, !Ref CertDomain, !Ref Domain]
+      DomainName: !Ref Domain
+      DomainValidationOptions:
+        - DomainName: !Ref Domain
+          ValidationDomain: !Ref TLD
 
   #
   # CloudFront CDN
@@ -165,7 +163,11 @@ Resources:
   DomainDNS:
     Type: AWS::Route53::RecordSetGroup
     Properties:
-      HostedZoneName: !Ref Route53HostedZoneName
+      HostedZoneName:
+        Fn::Join:
+          - ''
+          - - !Ref TLD
+            - '.'
       RecordSets:
         -
           Name: !Ref Domain
@@ -181,7 +183,11 @@ Resources:
     Type: AWS::Route53::RecordSet
     Condition: NeedsRedirect
     Properties:
-      HostedZoneName: !Ref Route53HostedZoneName
+      HostedZoneName:
+        Fn::Join:
+          - ''
+          - - !Ref TLD
+            - '.'
       Name: !Ref Redirect
       Type: 'CNAME'
       TTL: 900
