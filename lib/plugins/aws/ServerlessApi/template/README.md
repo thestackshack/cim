@@ -24,5 +24,7 @@ This template will create the following AWS resources:
 ## dev stage
 You can also deploy a dev environment for testing.
 
-`cim stack-up --stage=dev`
-`cim deploy-lambda --stage=dev`
+```
+cim stack-up --stage=dev
+cim deploy-lambda --stage=dev
+```
