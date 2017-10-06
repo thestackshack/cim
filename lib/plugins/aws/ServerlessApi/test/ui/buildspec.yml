@@ -1,0 +1,12 @@
+version: 0.1
+phases:
+  install:
+    commands:
+  pre_build:
+    commands:
+  build:
+    commands:
+      - aws s3 sync www "s3://${BUCKET_NAME}" --acl bucket-owner-full-control --acl public-read --delete --cache-control "max-age=1" --exclude www/assets
+      - aws s3 sync www/assets "s3://${BUCKET_NAME}/assets" --acl bucket-owner-full-control --acl public-read --delete --cache-control "max-age=31536000"
+  post_build:
+    commands:
