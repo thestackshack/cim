@@ -195,7 +195,7 @@ Resources:
   #
   # We need to give API Gateway permission to invoke our Lambda function.
   #
-  ContactUsFunctionPermission:
+  PermissionForAPIGatewayToInvokeLambda:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:invokeFunction
@@ -266,6 +266,11 @@ Resources:
             DNSName: !GetAtt ApiDomainName.DistributionDomainName
 
 Outputs:
+  LambdaFunction:
+    Description: Lambda Function
+    Value: !Ref LambdaFunction
+    Export:
+      Name: !Sub '${AWS::StackName}-LambdaFunction'
   ApiGatewayUrl:
     Description: URL of your API endpoint
     Value: !Join
