@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  Service1Name:
+    Type: String
+    Description: ECR Repository Name
+
+
+Resources:
+
+  Repository: 
+    Type: AWS::ECR::Repository
+    Properties: 
+      RepositoryName: !Ref Service1Name
+      RepositoryPolicyText: 
+        Version: "2012-10-17"
+        Statement:
+          -
+            Sid: AllowPushPull
+            Effect: Allow
+            Principal:
+              AWS:
+                - !Sub "arn:aws:iam::${AWS::AccountId}:user/user1"
+            Action:
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:BatchGetImage"
+              - "ecr:BatchCheckLayerAvailability"
+              - "ecr:PutImage"
+              - "ecr:InitiateLayerUpload"
+              - "ecr:UploadLayerPart"
+              - "ecr:CompleteLayerUpload"
+
+Outputs:
+  Service1Repository:
+    Value: !Ref 'Repository'
+    Export:
+      Name: !Sub '${AWS::StackName}-Service1Repository'
+  Service1RepositoryUrl:
+    Value: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}"
+    Export:
+      Name: !Sub '${AWS::StackName}-Service1RepositoryUrl'

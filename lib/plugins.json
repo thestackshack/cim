@@ -10,5 +10,9 @@
   "./plugins/aws/Lambda/nodejs/kinesis/LambdaNodeKinesis",
   "./plugins/aws/Lambda/nodejs/sns/LambdaNodeSNS",
   "./plugins/aws/Lambda/nodejs/cloudwatch-cron/LambdaNodeCloudwatchCron",
-  "./plugins/aws/Lambda/nodejs/cloudwatch-logs/LambdaNodeCloudwatchLogs"
+  "./plugins/aws/Lambda/nodejs/cloudwatch-logs/LambdaNodeCloudwatchLogs",
+  "./plugins/aws/VPC/index",
+  "./plugins/aws/ECR/index",
+  "./plugins/aws/ECS/index",
+  "./plugins/aws/ECSService/index"
 ]

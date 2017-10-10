@@ -1,0 +1,32 @@
+version: 0.1
+stack:
+  name: vpc # Note: Update this with your stack name
+  template:
+    file: aws-vpc.template
+    bucket: cim-stack-artifacts # Note: Update this with your bucket name.  Stacks are uploaded here prior to deployment.'
+
+#
+# Reference parent stacks fo included shared information like stack name.
+#
+#  parents:
+#    base: '../base'
+
+#
+# Define stack input parameters.
+#
+  parameters:
+    AvailabilityZones: 'us-east-1a, us-east-1b' # Replace these with your AZ's
+    KeyPairName: '<your key pair name>'
+    NumberOfAZs: '2' # This number must match the number of AZ's above.
+
+#
+# Define stack capabilities required.
+#
+#  capabilities:
+#    - 'CAPABILITY_IAM'
+
+#
+# Define global tags.
+#
+#  tags:
+#    app: 'cim-stack'

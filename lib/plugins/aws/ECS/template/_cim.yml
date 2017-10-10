@@ -1,0 +1,33 @@
+version: 0.1
+stack:
+  name: services-stack-ecs # Note: Update this with your stack name
+  template:
+    file: cloudformation.yml
+    bucket: cim-stack-artifacts # Note: Update this with your bucket name.  Stacks are uploaded here prior to deployment.'
+
+#
+# Reference parent stacks fo included shared information like stack name.
+#
+  parents:
+    vpc: '../../vpc' # Path to your VPC stack.  This isn't required.  You could also hard code the VPC params below.
+
+#
+# Define stack input parameters.
+#
+  parameters:
+    VPCStack: '${stack.parents.vpc.stack.name}'
+    KeyPairName: '${stack.parents.vpc.stack.parameters.KeyPairName}'
+    #TLD: 'example.com'
+    #Domain: 'api.example.com'
+
+#
+# Define stack capabilities required.
+#
+  capabilities:
+    - 'CAPABILITY_IAM'
+
+#
+# Define global tags.
+#
+#  tags:
+#    app: 'cim-stack'

@@ -300,6 +300,38 @@ stack:
     owner: 'John Doe'
 ```
 
+## Policy and PolicyDuringUpdate
+CIM supports both the `Policy` and `PolicyDuringUpdate` CloudFormation params.
+```
+version: 0.1
+stack:
+  name: 'test'
+  template:
+    file: 'cloudformation.yml'
+    bucket: 'test-bucket'
+  policy:
+    file: 'policy.json'
+    bucket: 'test-bucket'
+  policyDuringUpdate:
+    file: 'policyDuringUpdat'
+    bucket: 'test-bucket'
+```
+
+For more information about `Policy` and `PolicyDuringUpdate` see here: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/protect-stack-resources.html#protect-stack-resources-modifying
+
+## All CloudFormation Params
+All AWS SDK CloudFormation [createStack](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CloudFormation.html#createStack-property) and [updateStack](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CloudFormation.html#updateStack-property) params are supported.  If you add them to your _cim.yml config file they will be used when creating and updating your stack.
+
+- Capabilities
+- RollbackConfiguration
+- DisableRollback
+- TimeoutInMinutes
+- NotificationARNs
+- ResourceTypes
+- RoleARN
+- OnFailure
+- EnableTerminationProtection
+
 ## Stage
 The `stage` object is used to override any part of the configuration file what that `--stage` is used as a command line option.  For example if we have the following dev stage:
 ```
@@ -424,6 +456,10 @@ cim create --template=<template>
 | [lambda-node-sns](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/sns/template) | A single Lambda function with an SNS event trigger. |
 | [lambda-node-cloudwatch-cron](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/cloudwatch-cron/template) | A single Lambda function with a scheduled CloudWatch cron event trigger. |
 | [lambda-node-cloudwatch-logs](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/Lambda/nodejs/cloudwatch-logs/template) | A single Lambda function with a CloudWatch Logs event trigger. |
+| [vpc](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/VPC/template) | VPC - Modular and scalable virtual networking foundation on the AWS Cloud. |
+| [ecr](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/ECR/template) | ECR - AWS Docker Container Registry. |
+| [ecs](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/ECS/template) | ECS - AWS EC2 Docker Container Service. |
+| [ecs-service](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/ECSService/template) | Example ECS Service. |
 
 # Plugin Framework
 Do you want to create additional CIM commands?  Or do you want to create `before` and `after` hooks for any CIM command?  Or do you just want to create a new template?
@@ -434,5 +470,4 @@ There are two ways to contribute to CIM:
 
 # Coming soon...
 - Add cloudformation change set.  createChangeSet, executeChangeSet.
-- Add additional cloudformation parameters to _cim.yml and the subsequent calls to createStack and updateStack (http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CloudFormation.html#createStack-property).
 - Add multiple CloudFormation scripts per package?  Maybe...
