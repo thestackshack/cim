@@ -354,7 +354,9 @@ stage:
 Now when we use the `--stage=dev` command line option, our stack name will be 'base-dev' and our param1 will be 'dev-param'.  Any field can be overridden.    
 
 ## opt
-You can reference any other field in the config file and use it in a variable.
+You can reference any cli option and use it in a variable.
+
+For example, we use the `profile` cli option in this command below: `cim stack-up --profile=bluefin`
 ```
 version: 0.1
 stack:
@@ -363,7 +365,7 @@ stack:
     file: 'cloudformation.yml'
     bucket: 'base-templates'
   parameters:
-    param1: '${opt.stack.name}'
+    param1: '${opt.profile}'
 ```
 ## env
 You can reference any environment var in the config file and use it in a variable.
@@ -460,6 +462,7 @@ cim create --template=<template>
 | [ecr](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/ECR/template) | ECR - AWS Docker Container Registry. |
 | [ecs](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/ECS/template) | ECS - AWS EC2 Docker Container Service. |
 | [ecs-service](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/ECSService/template) | Example ECS Service. |
+| [ecs-service-ci](https://github.com/thestackshack/cim/tree/master/lib/plugins/aws/ECSService/template) | Example ECS Service with continuous integration. |
 
 # Plugin Framework
 Do you want to create additional CIM commands?  Or do you want to create `before` and `after` hooks for any CIM command?  Or do you just want to create a new template?

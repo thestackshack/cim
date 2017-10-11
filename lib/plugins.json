@@ -14,5 +14,6 @@
   "./plugins/aws/VPC/index",
   "./plugins/aws/ECR/index",
   "./plugins/aws/ECS/index",
-  "./plugins/aws/ECSService/index"
+  "./plugins/aws/ECSService/index",
+  "./plugins/aws/ECSServiceCI/index"
 ]

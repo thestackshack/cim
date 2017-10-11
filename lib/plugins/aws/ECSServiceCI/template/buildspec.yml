@@ -1,0 +1,15 @@
+version: 0.1
+phases:
+  pre_build:
+    commands:
+      - $(aws ecr get-login)
+  build:
+    commands:
+      - docker build --tag "$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)" .
+  post_build:
+    commands:
+      - docker tag "$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)" "${REPOSITORY_URI}"
+      - docker tag "$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)" "${REPOSITORY_URI}:$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+      - docker push "${REPOSITORY_URI}"
+      # Uncomment if you wish to enable build notifications.  You must also uncomment the 'NotificationEmail' and/or 'NotificationSMS' in _cim.yml.
+      #- aws sns publish --topic-arn ${SNS_TOPIC_ARN} --message "${APP} version $(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8) is ready." --subject "${APP} version $(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8) is ready."
