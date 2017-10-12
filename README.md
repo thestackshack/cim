@@ -249,8 +249,6 @@ cim lambda-logs {OPTIONS}
   - _ex. --internal=5000_
 - `--filterPattern`: (optional) [CloudWatch Logs filter pattern](http://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html).
   - _ex. --filterPattern=ERROR_
-- `--stage`: (optional) Create or update the stack(s) using the give [stage](#stage).
-  - _ex. --stage=prod_
 - `--profile`: (optional) Your [AWS credentials profile](https://aws.amazon.com/blogs/security/a-new-and-standardized-way-to-manage-credentials-in-the-aws-sdks/).
   - _ex. --profile=prod_aws_account_
 ## help
