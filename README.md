@@ -75,6 +75,9 @@ npm install cim -g
 - [stack-show](#stack-show)
 - [stack-delete](#stack-delete)
 - [lambda-deploy](#lambda-deploy)
+- [lambda-publish](#lambda-publish)
+- [lambda-versions](#lambda-versions)
+- [lambda-unpublish](#lambda-unpublish)
 - [lambda-logs](#lambda-logs)
 - [help](#help)
 ## create
