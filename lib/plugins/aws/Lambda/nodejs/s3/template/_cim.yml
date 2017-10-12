@@ -32,7 +32,6 @@ stack:
 lambda:
   functions:
     -
-      alias: hello
       function: ${stack.outputs.LambdaFunction}
       zip_file: index.zip
   deploy:
