@@ -52,7 +52,7 @@ cim stack-up
 cim lambda-deploy
 
 # View logs
-cim lambda-logs --alias=hello --tail=true
+cim lambda-logs --function=<function-name> --tail=true
 
 # Delete you stack
 cim stack-delete
@@ -151,7 +151,12 @@ cim stack-delete {OPTIONS}
 - `--profile`: (optional) Your [AWS credentials profile](https://aws.amazon.com/blogs/security/a-new-and-standardized-way-to-manage-credentials-in-the-aws-sdks/).
   - _ex. --profile=prod_aws_account_
 ## lambda-deploy
-Deploy you Lambda functions.
+Deploy your Lambda functions.
+
+If `alias` and `version` are used then `alias` is simply updated to point to the specified `version`.  
+
+If `alias` and `version` are omitted then a new version of the code is uploaded and the '$LATEST' alias is updated to point to this new version.
+
 ### Usage
 ```
 cim lambda-deploy {OPTIONS}
@@ -161,12 +166,67 @@ cim lambda-deploy {OPTIONS}
   - _ex. --dir=/app_
 - `--recursive`: (optional) Recursively search for nested stacks to deploy.  Any nested directory with a valid [_cim.yml](#_cimyml) file.  Default is 'false'.
   - _ex. --recursive=true_
-- `--alias`: (optional) Restrict to a single Lambda function by its [alias](#alias).
-  - _ex. --alias=function1_
+- `--function`: (optional) Restrict to a single Lambda function by its name.
+  - _ex. --function=function1_
+- `--alias`: (optional) Deploys the `version` to this `alias` below.
+  - _ex. --alias=PROD_
+- `--version`: (optional) Deploys this `version` to the `alias` above.
+  - _ex. --version=2_
 - `--stage`: (optional) Create or update the stack(s) using the give [stage](#stage).
   - _ex. --stage=prod_
 - `--profile`: (optional) Your [AWS credentials profile](https://aws.amazon.com/blogs/security/a-new-and-standardized-way-to-manage-credentials-in-the-aws-sdks/).
   - _ex. --profile=prod_aws_account_
+
+## lambda-publish
+Publish a new `version` of this function.
+### Usage
+```
+cim lambda-publish {OPTIONS}
+```
+### Options
+- `--dir`: (optional) The directory to run this command in.  Defaults to the current directory.
+  - _ex. --dir=/app_
+- `--function`: (optional) Restrict to a single Lambda function by its name.
+  - _ex. --function=function1_
+- `--stage`: (optional) Create or update the stack(s) using the give [stage](#stage).
+  - _ex. --stage=prod_
+- `--profile`: (optional) Your [AWS credentials profile](https://aws.amazon.com/blogs/security/a-new-and-standardized-way-to-manage-credentials-in-the-aws-sdks/).
+  - _ex. --profile=prod_aws_account_
+
+## lambda-versions
+Show all the lambda function versions and associated aliases.
+### Usage
+```
+cim lambda-versions {OPTIONS}
+```
+### Options
+- `--dir`: (optional) The directory to run this command in.  Defaults to the current directory.
+  - _ex. --dir=/app_
+- `--function`: (optional) Restrict to a single Lambda function by its name.
+  - _ex. --function=function1_
+- `--stage`: (optional) Create or update the stack(s) using the give [stage](#stage).
+  - _ex. --stage=prod_
+- `--profile`: (optional) Your [AWS credentials profile](https://aws.amazon.com/blogs/security/a-new-and-standardized-way-to-manage-credentials-in-the-aws-sdks/).
+  - _ex. --profile=prod_aws_account_
+
+## lambda-unpublish
+Unublish a `version` of this function.  Delete unused versions.
+### Usage
+```
+cim lambda-unpublish {OPTIONS}
+```
+### Options
+- `--dir`: (optional) The directory to run this command in.  Defaults to the current directory.
+  - _ex. --dir=/app_
+- `--function`: (optional) Restrict to a single Lambda function by its name.
+  - _ex. --function=function1_
+- `--version`: (required) Deletes this `version`.
+  - _ex. --version=2_
+- `--stage`: (optional) Create or update the stack(s) using the give [stage](#stage).
+  - _ex. --stage=prod_
+- `--profile`: (optional) Your [AWS credentials profile](https://aws.amazon.com/blogs/security/a-new-and-standardized-way-to-manage-credentials-in-the-aws-sdks/).
+  - _ex. --profile=prod_aws_account_
+
 ## lambda-logs
 Show the CloudWatch Logs for a single Lambda function.
 ### Usage
@@ -176,8 +236,8 @@ cim lambda-logs {OPTIONS}
 ### Options
 - `--dir`: (optional) The directory to run this command in.  Defaults to the current directory.
   - _ex. --dir=/app_
-- `--alias`: Restrict to a single Lambda function by its [alias](#alias).
-  - _ex. --alias=function1_
+- `--function`: Restrict to a single Lambda function by its name.
+  - _ex. --function=function1_
 - `--tail`: (optional) Tail the logs.  Default is false.
   - _ex. --tail=true_
 - `--startTime`: (optional) Start fetching logs from this time.  Time in minutes.  Ex. '30s' minutes ago.  Default is '30s'.
@@ -395,7 +455,7 @@ stack:
 ## Lambda
 If your stack includes one or more lambda's you can add the `lambda` section to your _cim.yml to enable Lambda support ([lambda-deploy](#lambda-deploy), [lambda-logs](#lambda-logs)).
 
-In this example we have two Lambda functions.  The `function_name` will be an output param from our stack.  The `alias` is used by the [lambda-deploy](#lambda-deploy) and [lambda-logs](#lambda-logs) commands to specify a single function.
+In this example we have two Lambda functions.  The `function` will be an output param from our stack.  The `function` is used by the [lambda-deploy](#lambda-deploy) and [lambda-logs](#lambda-logs) commands to specify a single function.
 
 The `deploy` section which is broken up into two parts is used by the [lambda-deploy](#lambda-deploy) command.
 - `pre_deploy` Install any dependencies, run the tests, and package the Lambda zip for deployment.
@@ -406,12 +466,10 @@ The Lambda zip that is packaged in the `pre_deploy` phase must match the `zip_fi
 lambda:
   functions:
     -
-      alias: hello
-      function_name: ${stack.outputs.LambdaFunction}
+      function: ${stack.outputs.LambdaFunction}
       zip_file: index.zip
     -
-      alias: second
-      function_name: ${stack.outputs.LambdaFunctionSecond}
+      function: ${stack.outputs.LambdaFunctionSecond}
       zip_file: index.zip
   deploy:
     phases:
@@ -439,6 +497,22 @@ lambda:
           # Reinstall the dev npm packages.
           - npm install
 ```
+
+Lambda versions and aliases are also supported.  If your cloudformation template includes an alias, you can include it in your `_cim.yml` file like so:
+
+```
+lambda:
+  functions:
+    -
+      function: ${stack.outputs.LambdaFunction}
+      aliases:
+        PROD: ${stack.outputs.LambdaFunctionProdAlias}
+      zip_file: index.zip
+```
+
+Use the [lambda-publish](#lambda-publish) and [lambda-unpublish](#lambda-unpublish) commands to upload and delete new versions.
+
+The [lambda-deploy](#lambda-deploy) command can be used to deploy new versions, by updating the alias to point to the specified version.
 
 # Templates
 The templates are using when [creating](#create) a new package.

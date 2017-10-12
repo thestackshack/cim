@@ -32,7 +32,7 @@ lambda:
   functions:
     -
       alias: hello
-      function_name: ${stack.outputs.LambdaFunction}
+      function: ${stack.outputs.LambdaFunction}
       zip_file: index.zip
   deploy:
     phases:
