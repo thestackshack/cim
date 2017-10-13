@@ -6,7 +6,7 @@
 
 [![](https://nodei.co/npm/cim.svg?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/cim)
 
-CIM takes the pain out of Infrastructure as Code and CloudFormation! 
+CIM takes the pain out of Infrastructure as Code and CloudFormation!
 
 The importance of IaC has increased, due to the rise in popularity of cloud functions, event driven architectures, and the number of AWS services offered.  
 
@@ -61,7 +61,7 @@ cim stack-delete
 # Setup
 ## Prerequisites
 - [Configure your AWS keys](http://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-started-nodejs.html#getting-started-nodejs-configure-keys)
-- [Install node and npm](https://nodejs.org/en/download/current/) 
+- [Install node and npm](https://nodejs.org/en/download/current/)
 ## Install CIM
 Use npm to install CIM globally.
 ```
@@ -77,7 +77,7 @@ npm install cim -g
 - [lambda-deploy](#lambda-deploy)
 - [lambda-publish](#lambda-publish)
 - [lambda-versions](#lambda-versions)
-- [lambda-unpublish](#lambda-unpublish)
+- [lambda-prune](#lambda-prune)
 - [lambda-logs](#lambda-logs)
 - [help](#help)
 ## create
@@ -153,10 +153,11 @@ cim stack-delete {OPTIONS}
   - _ex. --stage=prod_
 - `--profile`: (optional) Your [AWS credentials profile](https://aws.amazon.com/blogs/security/a-new-and-standardized-way-to-manage-credentials-in-the-aws-sdks/).
   - _ex. --profile=prod_aws_account_
+
 ## lambda-deploy
 Deploy your Lambda functions.
 
-If `alias` and `version` are used then `alias` is simply updated to point to the specified `version`.  
+If `alias` and `version` are used then `alias` is simply updated to point to the specified `version`.  Read more about Versions and Aliases [here](#versions-and-aliases).
 
 If `alias` and `version` are omitted then a new version of the code is uploaded and the '$LATEST' alias is updated to point to this new version.
 
@@ -175,10 +176,96 @@ cim lambda-deploy {OPTIONS}
   - _ex. --alias=PROD_
 - `--version`: (optional) Deploys this `version` to the `alias` above.
   - _ex. --version=2_
+- `--prune`: (optional) Deletes all unused versions.  Defaults to 'false'.
+  - _ex. --prune=true_
 - `--stage`: (optional) Create or update the stack(s) using the give [stage](#stage).
   - _ex. --stage=prod_
 - `--profile`: (optional) Your [AWS credentials profile](https://aws.amazon.com/blogs/security/a-new-and-standardized-way-to-manage-credentials-in-the-aws-sdks/).
   - _ex. --profile=prod_aws_account_
+
+### Versions and Aliases
+AWS recommends using Lambda [Versions and Aliases](http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html) in production.  This is not required though
+
+Here is an example CloudFormation template that uses a Lambda version and alias.  The alias is then used by the S3 trigger.  
+
+```
+  #
+  # Our Lambda function.
+  #
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Timeout: 5
+      Role:
+        Fn::GetAtt:
+          - IamRoleLambdaExecution
+          - Arn
+      Code:
+        ZipFile: !Sub |
+          'use strict';
+
+          exports.handler = function(event, context) {
+              console.log(JSON.stringify(event));
+              context.succeed('Hello CIM!');
+          };
+      Runtime: nodejs6.10
+
+  #
+  # Version 1 of our function.
+  #
+  LambdaFunctionVersion:
+    Type: AWS::Lambda::Version
+    Properties:
+      FunctionName: !Ref LambdaFunction
+
+  #
+  # 'PROD' Alias -> Version 1
+  #
+  LambdaFunctionAlias:
+    Type: AWS::Lambda::Alias
+    Properties:
+      FunctionName: !Ref LambdaFunction
+      FunctionVersion: !GetAtt LambdaFunctionVersion.Version
+      Name: 'PROD'
+
+  #
+  # S3 bucket
+  #
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        Fn::Join:
+          - ''
+          - - !Ref AWS::StackName
+            - '-s3'
+      AccessControl: 'Private'
+      NotificationConfiguration:
+        LambdaConfigurations:
+          -
+            Function: !Ref LambdaFunctionAlias
+            Event: 's3:ObjectCreated:*'
+            Filter:
+              S3Key:
+                Rules:
+                  -
+                    Name: suffix
+                    Value: .jpg
+```
+
+We can now deploy additional versions to our Lambda without affecting the `PROD` alias.  Once we have tested our code and are ready to go live we simply update the `PROD` alias to point to the new version.
+
+Don't forget to `prune` your unused versions so you don't run out of space.
+
+If you decide to use versions and aliases your deployment becomes two steps.
+
+Deployment with versions and aliases:
+- `cim lambda-publish`
+- `cim lambda-deploy --alias=<alias> --version=<version>`
+
+Deployment without versions and aliases:
+- `cim lambda-deploy`
 
 ## lambda-publish
 Publish a new `version` of this function.
@@ -212,19 +299,19 @@ cim lambda-versions {OPTIONS}
 - `--profile`: (optional) Your [AWS credentials profile](https://aws.amazon.com/blogs/security/a-new-and-standardized-way-to-manage-credentials-in-the-aws-sdks/).
   - _ex. --profile=prod_aws_account_
 
-## lambda-unpublish
-Unublish a `version` of this function.  Delete unused versions.
+## lambda-prune
+Delete one or more unused `version`'s of this function.
 ### Usage
 ```
-cim lambda-unpublish {OPTIONS}
+cim lambda-prune {OPTIONS}
 ```
 ### Options
 - `--dir`: (optional) The directory to run this command in.  Defaults to the current directory.
   - _ex. --dir=/app_
 - `--function`: (optional) Restrict to a single Lambda function by its name.
   - _ex. --function=function1_
-- `--version`: (required) Deletes this `version`.
-  - _ex. --version=2_
+- `--version`: (required) Deletes this `version`.  Set to 'all' to delete all unused versions.
+  - _ex. --version=2 or --version=all_ 
 - `--stage`: (optional) Create or update the stack(s) using the give [stage](#stage).
   - _ex. --stage=prod_
 - `--profile`: (optional) Your [AWS credentials profile](https://aws.amazon.com/blogs/security/a-new-and-standardized-way-to-manage-credentials-in-the-aws-sdks/).
@@ -549,3 +636,4 @@ There are two ways to contribute to CIM:
 # Coming soon...
 - Add cloudformation change set.  createChangeSet, executeChangeSet.
 - Add multiple CloudFormation scripts per package?  Maybe...
+- Add `lambda-unpublish --all=true` option to unpublish all unused versions.  To free up space.  
