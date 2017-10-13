@@ -254,6 +254,42 @@ Here is an example CloudFormation template that uses a Lambda version and alias.
                     Value: .jpg
 ```
 
+Here is the [_cim.yml](#_cimyml) `lambda` section that uses the Alias:
+```
+lambda:
+  functions:
+    -
+      function: ${stack.outputs.LambdaFunction}
+      aliases:
+        PROD: ${stack.outputs.LambdaFunctionAlias}
+      zip_file: index.zip
+  deploy:
+    phases:
+      pre_deploy:
+        commands:
+          # Install all npm packages including dev packages.
+          - npm install
+
+          # Run the tests
+          # - npm test
+
+          # Remove all the npm packages.
+          - rm -Rf node_modules
+
+          # Only install the non-dev npm packages.  We don't want to bloat our Lambda with dev packages.
+          - npm install --production
+
+          # Zip the Lambda for upload to S3.
+          - zip -r index.zip .
+      post_deploy:
+        commands:
+          # Remove the zip file.
+          - rm -Rf index.zip
+
+          # Reinstall the dev npm packages.
+          - npm install
+```
+
 We can now deploy additional versions to our Lambda without affecting the `PROD` alias.  Once we have tested our code and are ready to go live we simply update the `PROD` alias to point to the new version.
 
 Don't forget to `prune` your unused versions so you don't run out of space.
