@@ -8,11 +8,11 @@
 
 CIM takes the pain out of Infrastructure as Code and CloudFormation!
 
-The importance of IaC has increased, due to the rise in popularity of cloud functions, event driven architectures, and the number of AWS services offered.  
+CIM is a simple command line utility that bootstraps your CloudFormation CRUD operations, making them easier to execute, repeatable, and less error-prone. CIM separates out the stack template (YAML file) from the stack configuration (CLI options) so both can be stored safely in your project and executed again-and-again for stack updates. 
 
-Logic has slowly been pulled out of our applications and into cloud service providers.  This is amazing and allows our applications to scale and be cost effective but it changes how they look and feel.
+CIM is not a CloudFormation abstraction. I feel that writing CloudFormation templates directly, in the YAML format, is the best practice. AWS is the #1 cloud provider and CloudFormation is their language for creating stacks. Just go straight to the horses mouth, you’ll be glad you did in the long run.
 
-Infrastructure as Code is just as important, or more important, than the code itself.  Implementing IaC at the onset of a new project is a must.  But don't worry, CIM is here to help.  
+So what’s the problem? Why did you build CIM? The problem I was having with the AWS CloudFormation cli was remember the exact cli options used in previous executions.  Plus I wanted support for things like nested stacks, variable resolution, environments, encryption, Lambda deployments, etc…
 
  - CIM makes it easy to create, update, and delete stacks
  - CIM allows you to create nested stacks
@@ -517,7 +517,7 @@ All AWS SDK CloudFormation [createStack](http://docs.aws.amazon.com/AWSJavaScrip
 - EnableTerminationProtection
 
 ## Stage
-The `stage` object is used to override any part of the configuration file what that `--stage` is used as a command line option.  For example if we have the following dev stage:
+The `stage` object is used to override any part of the configuration file when that `--stage` is used as a command line option.  For example if we have the following dev stage:
 ```
 version: 0.1
 stack:
@@ -639,7 +639,7 @@ Use the [lambda-publish](#lambda-publish) and [lambda-unpublish](#lambda-unpubli
 The [lambda-deploy](#lambda-deploy) command can be used to deploy new versions, by updating the alias to point to the specified version.
 
 # Templates
-The templates are using when [creating](#create) a new package.
+The templates are used when [creating](#create) a new package.
 ```
 cim create --template=<template>
 ```
@@ -672,4 +672,4 @@ There are two ways to contribute to CIM:
 # Coming soon...
 - Add cloudformation change set.  createChangeSet, executeChangeSet.
 - Add multiple CloudFormation scripts per package?  Maybe...
-- Add `lambda-unpublish --all=true` option to unpublish all unused versions.  To free up space.  
+- Add genaric logs command to support all log groups, not just Lambda's.
