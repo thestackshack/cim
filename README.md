@@ -10,7 +10,7 @@ CIM takes the pain out of Infrastructure as Code and CloudFormation!
 
 CIM is a simple command line utility that bootstraps your CloudFormation CRUD operations, making them easier to execute, repeatable, and less error-prone. CIM separates out the stack template (YAML file) from the stack configuration (CLI options) so both can be stored safely in your project and executed again-and-again for stack updates. 
 
-CIM is not a CloudFormation abstraction. You still have to write CloudFormation templates.  Check out our pre-built [templates](#templates-1).
+CIM is not a CloudFormation abstraction. 
 
 So what’s the problem? Why did you build CIM? The problem I was having with the AWS CloudFormation cli was remember the exact cli options used in previous executions.  Plus I wanted support for things like nested stacks, variable resolution, environments, encryption, Lambda deployments, etc…
 
