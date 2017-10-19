@@ -12,7 +12,7 @@ CIM is a simple command line utility that bootstraps your CloudFormation CRUD op
 
 CIM is not a CloudFormation abstraction. 
 
-So what’s the problem? Why did you build CIM? The problem I was having with the AWS CloudFormation cli was remember the exact cli options used in previous executions.  Plus I wanted support for things like nested stacks, variable resolution, environments, encryption, Lambda deployments, etc…
+So what’s the problem? Why did you build CIM? The problem I was having with the AWS CloudFormation cli was remembering the exact cli options used in previous executions.  Plus I wanted support for things like nested stacks, variable resolution, environments, encryption, Lambda deployments, etc…
 
  - CIM makes it easy to create, update, and delete stacks
  - CIM allows you to create nested stacks
