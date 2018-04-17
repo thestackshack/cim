@@ -157,9 +157,9 @@ cim stack-delete {OPTIONS}
 ## lambda-deploy
 Deploy your Lambda functions.
 
-If `alias` and `version` are used then `alias` is simply updated to point to the specified `version`.  Read more about Versions and Aliases [here](#versions-and-aliases).
+If `alias` and `lambda-version` are used then `alias` is simply updated to point to the specified `lambda-version`.  Read more about Versions and Aliases [here](#versions-and-aliases).
 
-If `alias` and `version` are omitted then a new version of the code is uploaded and the '$LATEST' alias is updated to point to this new version.
+If `alias` and `lambda-version` are omitted then a new version of the code is uploaded and the '$LATEST' alias is updated to point to this new version.
 
 ### Usage
 ```
@@ -172,10 +172,10 @@ cim lambda-deploy {OPTIONS}
   - _ex. --recursive=true_
 - `--function`: (optional) Restrict to a single Lambda function by its name.
   - _ex. --function=function1_
-- `--alias`: (optional) Deploys the `version` to this `alias` below.
+- `--alias`: (optional) Deploys the `lambda-version` to this `alias` below.
   - _ex. --alias=PROD_
-- `--version`: (optional) Deploys this `version` to the `alias` above.
-  - _ex. --version=2_
+- `--lambda-version`: (optional) Deploys this `lambda-version` to the `alias` above.
+  - _ex. --lambda-version=2_
 - `--prune`: (optional) Deletes all unused versions.  Defaults to 'false'.
   - _ex. --prune=true_
 - `--stage`: (optional) Create or update the stack(s) using the give [stage](#stage).
@@ -298,13 +298,13 @@ If you decide to use versions and aliases your deployment becomes two steps.
 
 Deployment with versions and aliases:
 - `cim lambda-publish`
-- `cim lambda-deploy --alias=<alias> --version=<version>`
+- `cim lambda-deploy --alias=<alias> --lambda-version=<version>`
 
 Deployment without versions and aliases:
 - `cim lambda-deploy`
 
 ## lambda-publish
-Publish a new `version` of this function.
+Publish a new `lambda-version` of this function.
 ### Usage
 ```
 cim lambda-publish {OPTIONS}
@@ -346,8 +346,8 @@ cim lambda-prune {OPTIONS}
   - _ex. --dir=/app_
 - `--function`: (optional) Restrict to a single Lambda function by its name.
   - _ex. --function=function1_
-- `--version`: (required) Deletes this `version`.  Set to 'all' to delete all unused versions.
-  - _ex. --version=2 or --version=all_ 
+- `--lambda-version`: (required) Deletes this `lambda-version`.  Set to 'all' to delete all unused versions.
+  - _ex. --lambda-version=2 or --lambda-version=all_ 
 - `--stage`: (optional) Create or update the stack(s) using the give [stage](#stage).
   - _ex. --stage=prod_
 - `--profile`: (optional) Your [AWS credentials profile](https://aws.amazon.com/blogs/security/a-new-and-standardized-way-to-manage-credentials-in-the-aws-sdks/).
